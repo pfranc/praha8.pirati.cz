@@ -1,0 +1,88 @@
+---
+layout: default
+---
+
+{% assign programCategories = site.program | where: "campaignCategoryUid", page.campaignCategoryUid | sort:"order" %}
+
+<div class="container container--default pt-8 lg:py-24">
+  <header>
+    <h1 class="head-alt-md md:head-alt-lg max-w-5xl mb-4">Program pro volební období 2018 - 2022</h1>
+    <p>Povolební konstelace nám přisoudila opoziční roli, proto jsme se rozhodli se aktivně věnovat oblastem, které z této role můžeme ovlivnit.</p>
+  </header>
+  <main>
+                {% for category in programCategories %}
+
+                <article class="card">
+                  <div class="card__body">
+                    <div class="l-prg__content columns medium-10 text-left pull-right">
+                      <h2 class="head-heavy-sm mb-2 lg:mb-4">{{category.title}}</h2>
+                      <p>{{category.intro}}</p>
+                      {% if category.garant %}
+                        {% assign garant = site.people | where:"uid",category.garant | first %}
+                        {% include people/profile-badge.html item=garant showDescription=false showContactInfo=false class="badge--condensed" %}
+                      {% endif %}
+                    </div>
+                    <div class="l-prg__stats columns medium-2">
+                      <div class="l-prg__stats-done">
+                      {% if category.order %}
+                        <span class="l-prg__id">{{category.order}}</span>
+                      {% endif %}
+                      {% if category.redmine %}
+                        <svg width="100%" height="150px" viewBox="0 0 42 42" class="f-donut">
+                            <circle class="donut-hole" cx="21" cy="21" r="15.91549430918952" fill="#fff"></circle>
+                            <circle class="donut-ring" cx="21" cy="21" r="15.91549430918952" fill="transparent" stroke="#d2d3d4" stroke-width="3"></circle>
+                                <circle id='redmineid_{{ category.redmine }}' class="donut-segment" cx="21" cy="21" r="15.91549430918952" fill="transparent" stroke="#ce4b99" stroke-width="3" stroke-dasharray="0 100" stroke-dashoffset="25"></circle>
+                        </svg>
+                        <script>
+                            pirates.priorityStack.push(function (context) {
+                            var url = 'https://redmine.pirati.cz/issues/{{ category.redmine }}.json';
+                            var xhr = pirates.createCORSRequest('GET', url);
+                            if (!xhr) {
+                              alert('CORS not supported');
+                              return;
+                            }
+                            xhr.onload = function() {
+                              var doc = JSON.parse(xhr.responseText);
+                              var gauge = document.getElementById('redmineid_{{ category.redmine }}');
+                              gauge.setAttribute('stroke-dasharray', doc.issue.done_ratio + ' ' + (100 - doc.issue.done_ratio));
+                            }
+                            xhr.onerror = function() {
+                              console.log('Woops, there was an error making the request.');
+                            };
+                            xhr.send();
+                            });
+                            pirates.priorityStack.push(function (context) {
+                              var url = 'https://redmine.pirati.cz/issues.json?parent_id={{ category.redmine }}&sort=id:asc';
+                              var xhr = pirates.createCORSRequest('GET', url);
+                              if (!xhr) {
+                                alert('CORS not supported');
+                                return;
+                              }
+                              xhr.onload = function() {
+                                var doc = JSON.parse(xhr.responseText);
+                                var div = document.getElementById('redmine_tasks_{{category.redmine}}');
+                                div.appendChild(pirates.integrations.redmine.tasks(doc));
+                              }
+                              xhr.onerror = function() {
+                                console.log('Woops, there was an error making the request.');
+                              };
+                              xhr.send();
+                            });
+                        </script>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <h3 class="head-heavy-xs mb-2">Podúkoly:</h3>
+                  <div id="redmine_tasks_{{category.redmine}}"></div>
+                </article>
+            {% endfor %}
+        </main>
+  <footer>
+    <div class="row" style="text-align: center">
+      <p>Dále čtěte: <a href="/program/">původní volební program</a></p>
+    </div>
+  </footer>
+</div>
+
+<script type="application/javascript" src="/assets/js/pirates.js"></script>
