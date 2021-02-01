@@ -84,7 +84,7 @@ collections:
     permalink: /lide/:path/
   program:
     output: true
-    permalink: /volby-2018/:path/
+    permalink: /volby/:path/
   # Sole purpose is to create candidate lists in separate files.
   candidatelists:
     output: false

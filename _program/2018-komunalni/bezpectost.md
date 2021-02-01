@@ -1,11 +1,17 @@
 ---
-title: Bezpečnost 
-campaignCategoryUid: praha2018
-campaignGroupUid: volby-2018  # identifier of the group, to be used in program point
-perex: >
+title: Bezpečnost
+campaignCategoryUid: 2018-komunalni
+campaignGroupUid: volby-2018
+uid: sluzby
+order: 6
+garant: jan.kolator
+redmine: 28305
+img: program/sluzby.svg
+#perex: >
+#  [ text, který se zobrazí na přehledu programových bodů ]
+intro: >
   Bezpečnost ano, velký bratre! Namísto drahé a zbytečné šikany nasměrujeme peníze tam, kde jsou reálně potřeba.
 ---
-
 
 ## Bezpečnost ano, velký bratr ne!
 - Zkrotíme zakázky na městský kamerový systém
